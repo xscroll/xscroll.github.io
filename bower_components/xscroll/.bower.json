@@ -1,0 +1,25 @@
+{
+  "name": "xscroll",
+  "main": [
+    "./src/core.js",
+    "./build/xscroll.js"
+  ],
+  "dependencies": {},
+  "readmeFilename": "README.md",
+  "_id": "xscroll@1.0.0",
+  "description": "基于html5的移动端滚动高性能解决方案",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/huxiaoqi567/xscroll.git"
+  },
+  "homepage": "https://github.com/huxiaoqi567/xscroll",
+  "_release": "4526326b55",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "4526326b55f65be45c58f1f81143359cfcdc8fc6"
+  },
+  "_source": "git://github.com/huxiaoqi567/xscroll.git",
+  "_target": "*",
+  "_originalSource": "xscroll"
+}
