@@ -2,26 +2,33 @@
 	var XScroll = require('./core');
 	var DataSet = require('./dataset');
 	var SwipeEdit = require('./swipeedit');
+	var PullUp = require('./pullup');
+	var PullDown = require('./pulldown');
 	var transform = Util.prefixStyle("transform");
 	var PAN_END = "panend";
     var PAN_START = "panstart";
     var PAN = "pan";
 	var XList = function(cfg) {
-		this.super.call(this, cfg)
+		XList.superclass.constructor.call(this, cfg);
 	}
+	XList.Util = Util;
+	//namespace for plugins
+	XList.Plugin = {
+		SwipeEdit:SwipeEdit,
+		PullUp:PullUp,
+		PullDown:PullDown
+	};
 	XList.DataSet = DataSet;
-	XList.SwipeEdit = SwipeEdit;
-	Util.extend(XScroll, XList, {
+	Util.extend( XList, XScroll,{
 		init: function() {
 			var self = this;
-			var userConfig = self.userConfig = Util.mix({
+			XList.superclass.init.call(this);
+			self.userConfig = Util.mix({
 				data: [],
-				gpuAcceleration: true,
-				lockX: true,
-				scrollbarX: false,
-				itemHeight: 30
+				itemHeight:40
 			}, self.userConfig);
-			this.super.prototype.init.call(this)
+			self.userConfig.lockX = true;
+			self.userConfig.scrollbarX = false;
 			self._initInfinite();
 		},
 		/**
@@ -74,35 +81,35 @@
 			var cell = this.getCellByPageY(e.touches[0].pageY);
 			e.cell = cell;
 			this._curTouchedCell = cell;
-			this.super.prototype._fireTouchStart.call(this,e);
+			XList.superclass._fireTouchStart.call(this,e);
 		},
 		_firePanStart:function(e){
 			var cell = this.getCellByPageY(e.touch.startY);
 			e.cell = cell;
 			this._curTouchedCell = cell;
-			this.super.prototype._firePanStart.call(this,e);
+			XList.superclass._firePanStart.call(this,e);
 		},
 		_firePan:function(e){
 			if(this._curTouchedCell){
 				e.cell = this._curTouchedCell;
 			}
-			this.super.prototype._firePan.call(this,e);
+			XList.superclass._firePan.call(this,e);
 		},
 		_firePanEnd:function(e){
 			if(this._curTouchedCell){
 				e.cell = this._curTouchedCell;
 			}
-			this.super.prototype._firePanEnd.call(this,e);
+			XList.superclass._firePanEnd.call(this,e);
 			this._curTouchedCell = null;
 		},
 		_fireClick:function(eventName,e){
 			var cell = this.getCellByPageY(e.pageY);
 			e.cell = cell;
-			this.super.prototype._fireClick.call(this,eventName,e);
+			XList.superclass._fireClick.call(this,eventName,e);
 		},
 		getCellByPageY:function(pageY){
 			var self = this;
-			var offsetY = pageY - self.renderTo.offsetTop + Math.abs(self.getOffsetTop());
+			var offsetY = pageY - Util.getOffsetTop(self.renderTo) + Math.abs(self.getOffsetTop());
 			return self.getCellByOffsetY(offsetY);
 		},
 		getCellByRow:function(row){
@@ -132,7 +139,7 @@
 		insertData:function(datasetIndex,rowIndex,data){
 			var self = this;
 			if(data && datasetIndex >= 0 && self.datasets[datasetIndex] && rowIndex >= 0){
-				// return self.datasets
+				return self.datasets[datasetIndex].data = self.datasets[datasetIndex].data.slice(0,rowIndex).concat(data).concat(self.datasets[datasetIndex].data.slice(rowIndex))
 			}
 			return;
 		},
@@ -212,17 +219,17 @@
 		},
 		render: function() {
 			var self = this;
-			this.super.prototype.render.call(this);
+			XList.superclass.render.call(this);
 			self._getDomInfo();
 			self._initSticky();
 			var height = self.height;
 			var lastItem = self.domInfo[self.domInfo.length - 1];
-			var containerHeight = (lastItem && lastItem._top) ? lastItem._top + lastItem._height : self.height;
+			var containerHeight = (lastItem && lastItem._top !== undefined) ? lastItem._top + lastItem._height : self.height;
 			if (containerHeight < height) {
 				containerHeight = height;
 			}
 			self.containerHeight = containerHeight;
-			self.container.style.height = containerHeight;
+			self.container.style.height = containerHeight + "px";
 			self.renderScrollBars();
 			//渲染非回收元素
 			self._renderNoRecycledEl();
@@ -278,9 +285,7 @@
 								el.style[attrName] = elementsPos[i].style[attrName];
 							}
 						}
-						//performance
 						el.style.visibility = "visible";
-						//performance
 						el.style.height = elementsPos[i]._height + "px";
 						el.style[transform] = "translateY(" + elementsPos[i]._top + "px) " + translateZ;
 						self.userConfig.renderHook.call(self, el, elementsPos[i]);
@@ -318,14 +323,17 @@
 		},
 		_initSticky: function() {
 			var self = this;
-			if (!self.hasSticky || self._isStickyRendered) return;
-			self._isStickyRendered = true;
-			var sticky = document.createElement("div");
-			sticky.style.position = "absolute";
-			sticky.style.top = "0";
-			sticky.style.display = "none";
-			self.renderTo.appendChild(sticky);
-			self.stickyElement = sticky;
+			if (!self.hasSticky) return;
+			//create sticky element
+			if(!self._isStickyRendered){
+				var sticky = document.createElement("div");
+				sticky.style.position = "absolute";
+				sticky.style.top = "0";
+				sticky.style.display = "none";
+				self.renderTo.appendChild(sticky);
+				self.stickyElement = sticky;
+				self._isStickyRendered = true;
+			}
 			self.stickyDomInfo = [];
 			for (var i = 0, l = self.domInfo.length; i < l; i++) {
 				if (self.domInfo[i] && self.domInfo[i].style && "sticky" == self.domInfo[i].style.position) {
@@ -336,6 +344,7 @@
 		},
 		_stickyHandler: function(_offsetTop) {
 			var self = this;
+
 			if (!self.stickyDomInfoLength) return;
 			var offsetTop = Math.abs(_offsetTop);
 			//视区上方的sticky索引
@@ -377,7 +386,7 @@
 		},
 		enableGPUAcceleration: function() {
 			var self = this;
-			self.super.prototype.enableGPUAcceleration.call(self);
+			XList.superclass.enableGPUAcceleration.call(self);
 			for (var i = 0; i < self.infiniteLength; i++) {
 				if (!/translateZ/.test(self.infiniteElements[i].style[transform])) {
 					self.infiniteElements[i].style[transform] += " translateZ(0)";
@@ -386,7 +395,7 @@
 		},
 		disableGPUAcceleration: function() {
 			var self = this;
-			self.super.prototype.disableGPUAcceleration.call(self);
+			XList.superclass.disableGPUAcceleration.call(self);
 			for (var i = 0; i < self.infiniteLength; i++) {
 				self.infiniteElements[i].style[transform] = self.infiniteElements[i].style[transform].replace(/translateZ\(0px\)/, "");
 			}
@@ -406,12 +415,10 @@
 				var tmp = []
 				for (var i = 0; i < self.infiniteLength; i++) {
 					tmp.push({});
-					//performance
 					self.infiniteElements[i].style.position = "absolute";
 					self.infiniteElements[i].style.top = 0;
 					self.infiniteElements[i].style.visibility = "hidden";
 					self.infiniteElements[i].style.display = "block";
-					//performance
 				}
 				return tmp;
 			})()

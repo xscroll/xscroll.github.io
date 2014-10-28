@@ -6,18 +6,18 @@
   ],
   "dependencies": {},
   "readmeFilename": "README.md",
-  "_id": "xscroll@1.0.0",
-  "description": "基于html5的移动端滚动高性能解决方案",
+  "_id": "xscroll@2.1.0",
+  "description": "A Javascript Scrolling Framework For Mobile Web",
   "repository": {
     "type": "git",
     "url": "git://github.com/huxiaoqi567/xscroll.git"
   },
   "homepage": "https://github.com/huxiaoqi567/xscroll",
-  "_release": "ad6fac9f8d",
+  "_release": "b7d426296d",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "ad6fac9f8de85d70e1f69a4db32742d0948ca664"
+    "commit": "b7d426296d9aeefa24ee75c262bf9070a52753fe"
   },
   "_source": "git://github.com/huxiaoqi567/xscroll.git",
   "_target": "*",
