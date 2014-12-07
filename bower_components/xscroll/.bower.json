@@ -13,11 +13,11 @@
     "url": "git://github.com/huxiaoqi567/xscroll.git"
   },
   "homepage": "https://github.com/huxiaoqi567/xscroll",
-  "_release": "1b1dc1e4ca",
+  "_release": "390f2e6805",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "1b1dc1e4cab148d158497fee2d5095f3decd47c9"
+    "commit": "390f2e6805b316e7eade9cef26d187745d49d60c"
   },
   "_source": "git://github.com/huxiaoqi567/xscroll.git",
   "_target": "*",
