@@ -100,7 +100,7 @@ define(function(require, exports, module) {
 		},
 		slideLeft: function(row) {
 			var self = this;
-			var cell = xlist.getCellByRow(row);
+			var cell = xlist.getCellByRowOrCol(row);
 			if (!cell || !cell.element) return;
 			var el = cell.element.querySelector(self.userConfig.labelSelector);
 			if (!el || !el.style) return;
@@ -110,7 +110,7 @@ define(function(require, exports, module) {
 		},
 		slideRight: function(row) {
 			var self = this;
-			var cell = xlist.getCellByRow(row);
+			var cell = xlist.getCellByRowOrCol(row);
 			if (!cell || !cell.element) return;
 			var el = cell.element.querySelector(self.userConfig.labelSelector);
 			if (!el || !el.style) return;

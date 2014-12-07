@@ -4,7 +4,7 @@ define(function(require, exports, module) {
 	//最短滚动条高度
 	var MIN_SCROLLBAR_SIZE = 60;
 	//滚动条被卷去剩下的最小高度
-	var BAR_MIN_SIZE = 25;
+	var BAR_MIN_SIZE = 8;
 	//transform
     var transform = Util.prefixStyle("transform");
 
@@ -39,9 +39,7 @@ define(function(require, exports, module) {
     		self.xscroll.detach("scaleanimate",self._update,self);
 			self.xscroll.detach("scrollend",self._update,self);
 			self.xscroll.detach("scrollanimate",self._update,self);
-    		for(var i in events){
-				self.xscroll.detach(events[i],self._update,self)
-			}
+			!self.xscroll.userConfig.useTransition && self.xscroll.detach("scroll",self._update,self);
     		delete self;
     	},
 		render: function() {
@@ -49,8 +47,10 @@ define(function(require, exports, module) {
 			if (self.__isRender) return;
 			self.__isRender = true;
 			var xscroll = self.xscroll;
-			var css = self.isY ? "width: 3px;position:absolute;bottom:5px;top:5px;right:2px;z-index:999;overflow:hidden;-webkit-border-radius:2px;-moz-border-radius:2px;-o-border-radius:2px;" : 
-								"height:3px;position:absolute;left:5px;right:5px;bottom:2px;z-index:999;overflow:hidden;-webkit-border-radius:2px;-moz-border-radius:2px;-o-border-radius:2px;";
+			var translateZ = xscroll.userConfig.gpuAcceleration ? " translateZ(0) " : "";
+			var transform = translateZ ? transformStr+":"+translateZ +";": ""
+			var css = self.isY ? "width: 3px;position:absolute;bottom:5px;top:5px;right:2px;z-index:999;overflow:hidden;-webkit-border-radius:2px;-moz-border-radius:2px;-o-border-radius:2px;"+transform : 
+								"height:3px;position:absolute;left:5px;right:5px;bottom:2px;z-index:999;overflow:hidden;-webkit-border-radius:2px;-moz-border-radius:2px;-o-border-radius:2px;"+transform;
 			self.scrollbar = document.createElement("div");
 			self.scrollbar.style.cssText = css;
 			xscroll.renderTo.appendChild(self.scrollbar);
@@ -132,17 +132,25 @@ define(function(require, exports, module) {
 			if (self.__isEvtBind) return;
 			self.__isEvtBind = true;
 			var type = self.isY ? "y" : "x";
-			self.xscroll.on("scaleanimate",function(e){self._update(e.offset);})
-			self.xscroll.on("pan",function(e){self._update(e.offset);})
+
+			if(self.xscroll.userConfig.useTransition){
+				self.xscroll.on("pan",function(e){self._update(e.offset);})
+				self.xscroll.on("scrollanimate",function(e){
+					if(e.zoomType != type) return;
+					self._update(e.offset,e.duration,e.easing);
+				})
+				self.xscroll.on("scaleanimate",function(e){self._update(e.offset);})
+			}else{
+				self.xscroll.on("scroll",function(e){self._update(e.offset);});
+				
+			}
+
 			self.xscroll.on("scrollend",function(e){
 				if(e.zoomType.indexOf(type) > -1){
 					self._update(e.offset);
 				}
 			})
-			self.xscroll.on("scrollanimate",function(e){
-				if(e.zoomType != type) return;
-				self._update(e.offset,e.duration,e.easing);
-			})
+			
 		},
 		reset:function(){
 			var self = this;

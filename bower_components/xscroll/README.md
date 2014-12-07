@@ -8,7 +8,7 @@
 
 ## Vision
 
-2.1.1
+2.2.0
 
 ## Build
 
@@ -276,4 +276,15 @@ xlist.render();
 - pinch缩放优化
 - 滚动条计算问题
 - 去除mouse事件
+
+### v2.2.0
+- 优化边界反弹动画效果
+- 支持水平方向无尽滚动
+- 修复滚动停止时重绘、闪烁的问题
+- 新增useTransition配置，支持帧动画
+- 新增easing配置 如：ease ease-out ease-in
+- API调整 
+    - getCellByRow -> getCellByRowOrCol
+    - getCellByOffsetTop -> getCellByOffset
+    - getCellByPageY -> getCellByPagePos
 
