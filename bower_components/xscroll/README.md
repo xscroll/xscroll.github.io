@@ -4,11 +4,11 @@
 
 ## HomePage
 
-[http://huxiaoqi567.github.io/](http://huxiaoqi567.github.io/)
+[http://xscroll.github.io/](http://xscroll.github.io/)
 
-## Vision
+## Version
 
-2.2.0
+2.3.2
 
 ## Build
 
@@ -33,6 +33,13 @@ bower install xscroll
     * `lockX` 是否锁定横向滚动
     * `lockY` 是否锁定纵向滚动
     * `gpuAcceleration` 是否开启GPU硬件加速（在性能提升的同时需要注意内存控制）
+    * `snap` 是否开启折段滚动效果 
+    * `snapWidth` 段落宽度
+    * `snapHeight` 段落高度
+    * `snapEasing` 动画效果
+    * `snapDuration` 动画周期
+    * `snapColsNum` 段落列数
+    * `snapRowsNum` 段落行数
 * `enableGPUAcceleration()` 开启硬件加速
 * `disableGPUAcceleration()` 关闭硬件加速
 * `getOffset()` 获取水平和垂直偏移量，如:{x:0,y:100}
@@ -48,6 +55,10 @@ bower install xscroll
 * `plug(plugin)` 绑定插件
 * `unplug(pluginId|plugin)` 移除某插件
 * `getPlugin(pluginId)` 获取某个插件
+* `addView(xscroll)` 新增子view
+* `removeView(id)` 删除子view
+* `getViewById()` 获取子view
+* `getViews()` 获取所有子view
 
 ### XList
 
@@ -282,9 +293,27 @@ xlist.render();
 - 支持水平方向无尽滚动
 - 修复滚动停止时重绘、闪烁的问题
 - 新增useTransition配置，支持帧动画
-- 新增easing配置 如：ease ease-out ease-in
+- 新增easing配置 如：ease ease-out easeq-in
 - API调整 
     - getCellByRow -> getCellByRowOrCol
     - getCellByOffsetTop -> getCellByOffset
     - getCellByPageY -> getCellByPagePos
+
+
+### v2.3.0
+- 新增snap功能
+- 新增多个xscroll相互嵌套的管理机制
+
+### v2.3.1
+- DataSet guid重复问题
+- 修复部分安卓设备无法点停的问题
+- 修复执行stop()后定时器仍然执行的问题
+- 滚动条默认隐藏
+- 新增boundryout api
+- scrollanimate和panend触发顺序调整
+
+### v2.3.2
+- 修复bounce为false后报错的问题
+
+
 

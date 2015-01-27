@@ -70,7 +70,8 @@ body {
     bottom: 48px;
     left: 0;
     width: 100%;
-    overflow: hidden;
+    overflow: scroll;
+    -webkit-overflow-scrolling:touch;
 }
 #J_Scroll ul{
     /*position: absolute;*/
@@ -193,7 +194,17 @@ body {
         </div>
     </div>
     <div id="footer">Scroll-Vertical</div>
+    <script src="../lib/log.js"></script>
      <script src="../lib/sea.js"></script>
+     <script type="text/javascript">
+     (function(){
+        var J_Scroll = document.querySelector("#J_Scroll");
+        var container = J_Scroll.querySelector(".xs-container");
+        J_Scroll.addEventListener("scroll",function(e){
+            console.log(J_Scroll.scrollTop)
+        })
+     })()
+     </script>
     <script>
     seajs.config({
       base: "../build/cmd"
@@ -206,15 +217,19 @@ body {
             maxScale:2
         });
         
-        var pulldown = new XScroll.Plugin.PullDown({
-            xscroll:xscroll
-        });
+        // var pulldown = new XScroll.Plugin.PullDown({
+        //     xscroll:xscroll
+        // });
 
-        xscroll.plug(pulldown);
+        // xscroll.plug(pulldown);
 
-        xscroll.render();
+        // xscroll.render();
 
-        window.xscroll = xscroll
+        // xscroll.on("click",function(e){
+        //     console.log(e.target)
+        // })
+
+        // window.xscroll = xscroll
     })
     </script>
 </body>

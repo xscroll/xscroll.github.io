@@ -109,13 +109,13 @@ body {
     <div id="J_Scroll">
         <div class="xs-container">
             <ul class="xs-content">
-                <li>row1</li>
+                <li id="btn">click me</li>
                 <li>row2</li>
                 <li>row3</li>
                 <li>row</li>
                 <li>row</li>
                 <li>row</li>
-                <li>row</li>
+                <li><a href="http://xscroll.github.io">xscroll.github.io</a></li>
                 <li>row</li>
                 <li>row</li>
                 <li>row</li>
@@ -193,17 +193,20 @@ body {
         </div>
     </div>
     <div id="footer">Scroll-Vertical</div>
+     <script src="../lib/log.js"></script>
      <script src="../lib/sea.js"></script>
     <script>
     seajs.config({
-      base: "../build/cmd"
+      base: "../build/cmd/",
+       map: [
+        [".js", ".js?" + new Date().getTime()]
+      ]
     })
     seajs.use("core",function(XScroll){
         var xscroll = new XScroll({
             renderTo:"#J_Scroll",
-            scrollbars:true,
-            scalable:true,
-            maxScale:2
+            lockX:true,
+            scrollbarX:false
         });
         
         var pulldown = new XScroll.Plugin.PullDown({
@@ -213,7 +216,17 @@ body {
         xscroll.plug(pulldown);
 
         xscroll.render();
-
+        var i = 0;
+        xscroll.on("click",function(){
+            i ++;
+            console.log(i)
+        })
+        // var i = 0;
+        // document.body.addEventListener("click",function(e){
+        //     i++;
+        //     console.log(i)
+        // })
+   
         window.xscroll = xscroll
     })
     </script>
