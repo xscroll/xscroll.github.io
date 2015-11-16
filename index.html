@@ -1,437 +1,142 @@
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- <link rel="icon" href="../../favicon.ico"> -->
-
-    <title>Xscroll - A Javascript Scrolling Framework For Mobile Web</title>
-    <!-- Bootstrap core CSS -->
-    <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="bower_components/xscroll/lib/jquery.js"></script>
-    <!-- // <script src="node_modules/markdown/lib/markdown.js"></script> -->
-    <link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="highlight/styles/atelier-dune.dark.css">
-    <script src="highlight/highlight.pack.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
-
-    <!-- Custom styles for this template -->
-  <style type="text/css">
-  body {
-  padding-top: 20px;
-}
-
-.footer {
-  padding-top: 40px;
-  padding-bottom: 40px;
-  margin-top: 40px;
-  border-top: 1px solid #eee;
-}
-
-/* Main marketing message and sign up button */
-.jumbotron {
-  text-align: center;
-  background-color: transparent;
-}
-.jumbotron .btn {
-  padding: 14px 24px;
-  font-size: 21px;
-}
-
-/* Customize the nav-justified links to be fill the entire space of the .navbar */
-
-.nav-justified {
-  background-color: #eee;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-.nav-justified > li > a {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  margin-bottom: 0;
-  font-weight: bold;
-  color: #777;
-  text-align: center;
-  background-color: #e5e5e5; /* Old browsers */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#e5e5e5));
-  background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #e5e5e5 100%);
-  background-image:      -o-linear-gradient(top, #f5f5f5 0%, #e5e5e5 100%);
-  background-image: -webkit-gradient(linear, left top, left bottom, from(top), color-stop(0%, #f5f5f5), to(#e5e5e5));
-  background-image:         linear-gradient(top, #f5f5f5 0%, #e5e5e5 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#e5e5e5',GradientType=0 ); /* IE6-9 */
-  background-repeat: repeat-x; /* Repeat the gradient */
-  border-bottom: 1px solid #d5d5d5;
-}
-.nav-justified > .active > a,
-.nav-justified > .active > a:hover,
-.nav-justified > .active > a:focus {
-  background-color: #ddd;
-  background-image: none;
-  -webkit-box-shadow: inset 0 3px 7px rgba(0,0,0,.15);
-          box-shadow: inset 0 3px 7px rgba(0,0,0,.15);
-}
-.nav-justified > li:first-child > a {
-  border-radius: 5px 5px 0 0;
-}
-.nav-justified > li:last-child > a {
-  border-bottom: 0;
-  border-radius: 0 0 5px 5px;
-}
-
-@media (min-width: 768px) {
-  .nav-justified {
-    max-height: 52px;
-  }
-  .nav-justified > li > a {
-    border-right: 1px solid #d5d5d5;
-    border-left: 1px solid #fff;
-  }
-  .nav-justified > li:first-child > a {
-    border-left: 0;
-    border-radius: 5px 0 0 5px;
-  }
-  .nav-justified > li:last-child > a {
-    border-right: 0;
-    border-radius: 0 5px 5px 0;
-  }
-}
-
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-  /* Remove the padding we set earlier */
-  .masthead,
-  .marketing,
-  .footer {
-    padding-right: 0;
-    padding-left: 0;
-  }
-}
-</style>
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script>
-    // NOTICE!! DO NOT USE ANY OF THIS JAVASCRIPT
-// IT'S JUST JUNK FOR OUR DOCS!
-// ++++++++++++++++++++++++++++++++++++++++++
-/*!
- * Copyright 2014 Twitter, Inc.
- *
- * Licensed under the Creative Commons Attribution 3.0 Unported License. For
- * details, see http://creativecommons.org/licenses/by/3.0/.
- */
-// Intended to prevent false-positive bug reports about Bootstrap not working properly in old versions of IE due to folks testing using IE's unreliable emulation modes.
-(function () {
-  'use strict';
-
-  function emulatedIEMajorVersion() {
-    var groups = /MSIE ([0-9.]+)/.exec(window.navigator.userAgent)
-    if (groups === null) {
-      return null
-    }
-    var ieVersionNum = parseInt(groups[1], 10)
-    var ieMajorVersion = Math.floor(ieVersionNum)
-    return ieMajorVersion
-  }
-
-  function actualNonEmulatedIEMajorVersion() {
-    // Detects the actual version of IE in use, even if it's in an older-IE emulation mode.
-    // IE JavaScript conditional compilation docs: http://msdn.microsoft.com/en-us/library/ie/121hztk3(v=vs.94).aspx
-    // @cc_on docs: http://msdn.microsoft.com/en-us/library/ie/8ka90k2e(v=vs.94).aspx
-    var jscriptVersion = new Function('/*@cc_on return @_jscript_version; @*/')() // jshint ignore:line
-    if (jscriptVersion === undefined) {
-      return 11 // IE11+ not in emulation mode
-    }
-    if (jscriptVersion < 9) {
-      return 8 // IE8 (or lower; haven't tested on IE<8)
-    }
-    return jscriptVersion // IE9 or IE10 in any mode, or IE11 in non-IE11 mode
-  }
-
-  var ua = window.navigator.userAgent
-  if (ua.indexOf('Opera') > -1 || ua.indexOf('Presto') > -1) {
-    return // Opera, which might pretend to be IE
-  }
-  var emulated = emulatedIEMajorVersion()
-  if (emulated === null) {
-    return // Not IE
-  }
-  var nonEmulated = actualNonEmulatedIEMajorVersion()
-
-  if (emulated !== nonEmulated) {
-    window.alert('WARNING: You appear to be using IE' + nonEmulated + ' in IE' + emulated + ' emulation mode.\nIE emulation modes can behave significantly differently from ACTUAL older versions of IE.\nPLEASE DON\'T FILE BOOTSTRAP BUGS based on testing in IE emulation modes!')
-  }
-})();
-</script>
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-
-    <div class="container">
-
-      <div class="masthead">
-        <ul class="nav nav-justified">
-          <li class="active"><a href="index.html">Home</a></li>
-          <li><a href="demos.html">Demos</a></li>
-          <li><a target="_blank" href="https://github.com/huxiaoqi567/xscroll#readme">Doc</a></li>
-          <li><a href="https://github.com/huxiaoqi567/xscroll/archive/master.zip">Downloads</a></li>
-          <li><a target="_blank" href="https://github.com/huxiaoqi567/xscroll">Source</a></li>
-        </ul>
-      </div>
-
-      <!-- Jumbotron -->
-      <div class="jumbotron">
-        <h1>XScroll</h1>
-        <p class="lead">Xscroll - A Javascript Scrolling Framework For Mobile Web</p>
-        <p><a class="btn btn-lg btn-success"  href="#getstart" role="button">Get started</a></p>
-      </div>
+<html>
+<head>
+<title>XScroll - A JavaScript Scrolling Framework For Mobile Web</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="XScroll, a JavaScript scrolling framework for mobile web">
+<meta name="keywords" content="JavaScript, mobile, scroll, frontend, web development, framework">
+<meta name="author" content="TaobaoUED">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0,minimal-ui" />
+<link href="bootstrap-3.2.0-dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/web.css" rel="stylesheet">
+</head>
+<body>
+<div id="navbar">
+	<div class="iwrap">
+	<div id="logo">
+		<img src="./assets/images/logo.png" height="30">
+	</div>
+	<ul id="nav">
+		<li class="current">
+			<a href="index.html">Home</a>
+		</li><li>
+			<a href="demo.html">Demo</a>
+		</li><li>
+			<a target="_blank" href="node_modules/xscroll/doc/XScroll.html">Docs</a>
+		</li><li>
+			<a href="#">Technology</a>
+		</li><li>
+			<a target="_blank" href="https://github.com/huxiaoqi567/xscroll">Sources</a>
+		</li>
+	</ul>
+	</div>
 	
-      <!-- Example row of columns -->
-      <!-- <div class="row">
-        <div class="col-lg-4">
-          <h2>Safari bug warning!</h2>
-          <p class="text-danger">As of v7.0.1, Safari exhibits a bug in which resizing your browser horizontally causes rendering errors in the justified nav that are cleared upon refreshing.</p>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-lg-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-lg-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
-          <p><a class="btn btn-primary" href="#" role="button">View details &raquo;</a></p>
-        </div>
-      </div> -->
-
-   <xmp theme="united" style="display:none;">
-
-## API
-
-### Config
-
-#### renderTo 
-
-渲染节点
-
-#### width 
-
-外容器视窗宽度
-
-#### height 
-
-外容器视窗高度
-
-#### containerWidth 
-
-内容器宽度
-
-#### containerHeight 
-
-内容器高度
-
-### Method
-
-#### render() 
-
-渲染
-
-#### translate(offset) 
-
-移动 offset.x offset.y
-
-#### translateX(x) 
-
-水平移动
-
-#### translateY(y) 
-
-垂直移动
-
-#### getOffset() 
-
-获取滚动距离对象，包含x,y两个方向
-
-#### getOffsetTop()
-
-获取顶部滚动卷去的距离
-
-#### getOffsetLeft()
-
-获取左边滚动卷去的距离
-
-#### scrollTo(offset, duration, easing, callback) 
-
-滚动至
-
-#### scrollX(x, duration, easing,callback) 
-
-横向滚动
-
-#### scrollY(y, duration, easing,callback) 
-
-纵向滚动
-
-#### bounce(isEnabled) 
-
-是否允许边缘回弹
-
-#### boundry.expandTop(pixel)
-
-拓展上边界
-
-#### boundry.expandLeft(pixel)
-
-拓展左边界
-
-#### boundry.expandRight(pixel)
-
-拓展右边界
-
-#### boundry.expandBottom(pixel)
-
-拓展下边界
-
-#### boundry.reset()
-
-边界复位、复位拓展项，初始化为滚动容器的位置尺寸
-
-
-### ATTRS
-
-- width  滚动区域宽度
-
-- height  滚动区域高度
-
-- containerWidth  内容器宽度
-
-- containerHeight  内容器高度
-
-- scale  缩放比
-
-- minScale 最小缩放比
-
-- maxScale 最大缩放比
-
-- x 水平偏移量
-
-- y 垂直偏移量
-
-- lockX 是否锁定水平滚动（默认false）
-
-- lockY 是否锁定垂直滚动（默认false）
-
-
-
-
-### Event
-
-#### scrollend 
-
-滚动结束触发
-
-#### scroll
-
-滚动时触发
-
-#### panstart 
-
-手指开始滑动时触发
-
-#### pan 
-
-手指滑动时触发
-
-#### panend 
-
-手指滑动结束后触发
-
-#### scrollanimate
-
-调用scrollTo,scrollX,scrollY发生滚动动画时触发，返回offset、duration、easing等信息
-
-#### scaleanimate
-
-调用scaleTo发生缩放时触发，返回scale、duration、easing等信息
-
-#### afterrender 
-
-渲染后触发
-    </xmp>
-
-    <div class="row">
-        <h2 id="getstart">Example:</h2>
-        <pre><code>
-          // XScroll has been put on window
-          var xscroll = new XScroll({
-            renderTo:"#J_Scroll",
-            scrollbarX:false,
-            lockX:true
-          });
-
-          xscroll.render();
-
-        </code></pre>
-        <p class="text-danger">You shold put two elements wich has the classname '.xs-container' and '.cs-content' wrappered by the renderTo element , like this follow.</p>
-
-        <pre>
-      <code class="html">
-        &lt;div id="J_Scroll"&gt;
-            //for scroll-vertical
-            &lt;div class="xs-container"&gt;
-                //for scroll-horizontal
-                &lt;div class="xs-content"&gt;scroll-content&lt;/div&gt;
-            &lt;/div&gt;
-        &lt;/div&gt;
-        </code></pre>
-      </div>
-
-      <!-- Site footer -->
-      <div class="footer">
-        <!-- <p>&copy; Company 2014</p> -->
-      </div>
-
-    </div> <!-- /container -->
-
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script>
-    /*!
- * IE10 viewport hack for Surface/desktop Windows 8 bug
- * Copyright 2014 Twitter, Inc.
- * Licensed under the Creative Commons Attribution 3.0 Unported License. For
- * details, see http://creativecommons.org/licenses/by/3.0/.
- */
-
-// See the Getting Started docs for more information:
-// http://getbootstrap.com/getting-started/#support-ie10-width
-
-(function () {
-  // 'use strict';
-  if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-    var msViewportStyle = document.createElement('style')
-    msViewportStyle.appendChild(
-      document.createTextNode(
-        '@-ms-viewport{width:auto!important}'
-      )
-    )
-    document.querySelector('head').appendChild(msViewportStyle)
-  }
-
-})();
-</script>
- <!-- // <script type="text/javascript" src="strapdown.js"></script> -->
-  </body>
+<div id="github">
+	<a href="https://github.com/huxiaoqi567/xscroll" target="_blank">
+		<img src="./assets/images/github.png" alt="github" />
+	</a>
+</div>
+
+</div>
+
+</div>
+<div id="world">
+	<div class="iwrap">
+			<h1><!-- <a href="#"><img src="./assets/images/git.png" width="140" alt="github" /></a> -->
+			<span id="fc"></span>XScroll<sup>3.0</sup></h1>
+<!-- 				<h1><a href="#"><img src="./assets/images/fc.png" /></a> </h1> -->
+			<p class="slogan">A JavaScript Scrolling Framework For Mobile Web.</p>
+			<p class="desc"> makes mobile web development faster and easier. <br>It's made for folks of all skill levels, devices of all shapes, and projects of all sizes.</p>
+ 			<p class="try"><a class="button" href="demo.html">Try the Demo<span>
+ 				<!-- <img class="qrcode" src="./assets/images/qrcode.png" alt="github" /> -->
+ 			</span></a> <a class="button" href="https://github.com/huxiaoqi567/xscroll/archive/master.zip">Download</a></p>
+ 			<p class="more"><a href="#">Read the Documentation</a> &nbsp;&nbsp; <a href="#">What's new</a> &nbsp;&nbsp;  <a href="#">Star on Github</a></p>
+	</div>
+</div>
+<div id="technology" class="featurette">
+<div class="iwrap">
+	<div class="info">
+		<h2>Technology</h2>
+		<p class="sub">Give a man a fish, and he eats it. teach a man to fish, and he sells it or something.<!-- @Penny --></p>
+		<p class="technology"><a href="#"><img src="./assets/images/xt.png"></a></p>
+	</div>
+</div>
+</div>
+<div id="try" class="featurette">
+<div class="iwrap">
+	<div class="info">
+		<h2>Example</h2>
+		<code><xmp>// XScroll has been put on window
+var xscroll = new XScroll({
+	renderTo:"#J_Scroll",
+	scrollbarX:false,
+	lockX:true
+});
+xscroll.render();
+</xmp></code>
+		<p>You shold put two elements wich has the classname '.xs-container' and '.xs-content' wrappered by the renderTo element , like this follow.</p>
+		<code><xmp><div id="J_Scroll">
+  //for scroll-vertical
+  <div class="xs-container">
+    //for scroll-horizontal
+    <div class="xs-content">
+      scroll-content
+    </div>
+  </div>
+</div>
+</xmp></code>
+	</div>
+</div>
+</div>
+
+<!--
+<div class="featurette">
+	<div class="iwrap">
+		
+		<div class="info">
+			<h2>Native Then Native</h2>
+			<p class="sub">XScroll makes mobile web development faster and easier. <br>It's made for folks of all skill levels, devices of all shapes, and projects of all sizes.</p>
+		</div>
+		<ul class="feature">
+			<li>
+				<span class="icon speed"></span>
+				<h3>Speed</h3>
+				<p>Speed then Speed<br>Speed ....</p>
+			</li><li>
+				<span class="icon light"></span>
+				<h3>Light</h3>
+				<p>Light then Light<br>Light ...</p>
+			</li><li>
+				<span class="icon endless"></span>
+				<h3>Endless</h3>
+				<p>Endless then Endless<br>Endless ...</p>
+			</li><li>
+				<span class="icon adapt"></span>
+				<h3>Adapt</h3>
+				<p>Adapt then Adapt<br>Adapt ...</p>
+			</li><li>
+				<span class="icon tai"></span>
+				<h3>Mount Tai</h3>
+				<p>Tai then Tai Tai Tai Tai <br>Tai Tai</p>
+			</li><li>
+				<span class="icon plugin"></span>
+				<h3>Plugin</h3>
+				<p>Plugin then Plugin<br>Plugin ...</p>
+			</li>
+			
+		</ul>
+		<div class="info">
+			<p>XScroll is open source. It's hosted, developed, and maintained on GitHub.</p>
+		</div>
+	
+	</div>
+</div>
+-->
+<div id="footer">
+	<div class="iwrap">
+		<p>Copyright ® 2015 Taobao FED. All rights reserved.</p>
+		
+	</div>
+</div>
+</body>
 </html>

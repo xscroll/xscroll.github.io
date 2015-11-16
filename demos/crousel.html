@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Crousel</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<script>
+	(function(){
+		var remResize = function(){
+			var fontSize = window.screen.width/16;
+			document.documentElement.style.fontSize = fontSize + "px";
+		};
+		window.addEventListener("resize",remResize);
+		remResize();
+	})()
+	</script>
+	<style type="text/css">
+		*{
+			margin:0;padding: 0;
+		}
+		#crousel{
+			width: 100%;
+			position: relative;
+			height: 10rem;
+		}
+		#crousel .xs-container{
+			position: absolute;
+		}
+		#crousel .xs-content{
+			display: -webkit-box;
+			position: absolute;
+		}
+		.item{
+			-webkit-box-flex:1;
+			height: 10rem;
+			width: 16rem;
+			background: red;
+		}
+	</style>
+</head>
+<body>
+<div id="crousel">
+	<div class="xs-container">
+		<div class="xs-content">
+			<div class="item">
+				
+				<div class="xs-container">
+					<div class="xs-content">
+						test
+					</div>
+				</div>
+
+			</div>
+			<div class="item">item</div>
+			<div class="item">item</div>
+			<div class="item">item</div>
+			<div class="item">item</div>
+		</div>
+	</div>
+</div>
+<script src="../node_modules/xscroll/build/standalone/xscroll.min.js"></script>
+<script src="../node_modules/xscroll/build/standalone/plugins/scale.min.js"></script>
+<script>
+var xscroll = new XScroll({
+	renderTo:"#crousel",
+	preventDefault:true,
+	preventTouchMove:true,
+	lockY:false,
+	lockX:false,
+	scrollbarX:false,
+	scrollbarY:false
+});
+
+xscroll.plug(new XScroll.Plugins.Scale());
+xscroll.render();
+</script>
+</body>
+</html>
